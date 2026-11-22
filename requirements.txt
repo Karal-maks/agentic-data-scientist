@@ -1,0 +1,10 @@
+langgraph
+langchain-core
+langchain-anthropic
+pandas
+scikit-learn
+streamlit
+fastapi
+uvicorn
+python-multipart
+pytest
