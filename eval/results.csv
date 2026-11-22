@@ -1,0 +1,2 @@
+dataset,leak_test,ok,error,seconds,human_score
+iris,False,False,"Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. Fo",662,0.899749373433584

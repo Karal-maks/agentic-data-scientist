@@ -1,6 +1,7 @@
-import json, re
+import os, json, re
 import pandas as pd
 from app.llm import get_llm, ask
+
 
 def critic_node(state):
     d, t, m = state["run_dir"], state["target"], state["metrics"]
@@ -33,15 +34,16 @@ def critic_node(state):
     except Exception as e:
         issues.append(f"metrics.json has the wrong structure ({e}). Follow the required keys exactly.")
 
-    # 3. LLM code review
-    prompt = f"""Review this ML code for methodology errors. Check: any fitting
+    # 3. LLM code review (set CRITIC_LLM=0 to skip it and save one API call per round)
+    if os.getenv("CRITIC_LLM", "1") == "1":
+        prompt = f"""Review this ML code for methodology errors. Check: any fitting
 done before the train/test split, test data used for model selection or tuning,
 wrong metric for imbalanced data. Reply ONLY JSON: {{"problems": ["..."]}}
 Code:\n{state['model_code']}"""
-    raw = ask(get_llm(), prompt)
-    try:
-        issues += json.loads(re.search(r"\{.*\}", raw, re.S).group())["problems"]
-    except Exception:
-        pass
+        raw = ask(get_llm(), prompt)
+        try:
+            issues += json.loads(re.search(r"\{.*\}", raw, re.S).group())["problems"]
+        except Exception:
+            pass
 
     return {"critic": {"passed": not issues, "issues": issues}, "feedback": issues}
