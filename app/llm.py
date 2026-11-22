@@ -7,7 +7,7 @@ load_dotenv(override=True)
 def get_llm():
     return ChatGoogleGenerativeAI(
         model=os.getenv("LLM_MODEL", "gemini-3.6-flash"),
-        temperature=0,
+        
     )
 
 def ask(llm, messages) -> str:
